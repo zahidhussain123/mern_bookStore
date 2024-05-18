@@ -1,20 +1,45 @@
-import { useForm } from "react-hook-form"
-import Login from './Login'
-import { Link } from 'react-router-dom'
+import { useForm } from "react-hook-form";
+import Login from "./Login";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from 'react-hot-toast';
 
 const Register = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-      } = useForm()
-      const onSubmit = (data) => console.log(data)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const navigate = useNavigate()
+  const onSubmit = async (data) => {
+    const userData = {
+      fullname: data?.fullname,
+      email: data?.email,
+      password: data?.password,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4001/user/register",
+        userData
+      );
+      toast.success(response?.data?.message)
+      document.getElementById("my_modal_3").close();
+      setTimeout(() => {
+        window.location.reload();
+        localStorage.setItem("user", JSON.stringify(response?.data?.user))
+      }, 3000);
+      navigate("/");
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
   return (
     <div>
-          <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center">
         <div className=" w-[600px] ">
           <div className="modal-box">
-            <form  method="dialog" onSubmit={handleSubmit(onSubmit)}>
+            <form method="dialog" onSubmit={handleSubmit(onSubmit)}>
               {/* if there is a button in form, it will close the modal */}
               <Link
                 to="/"
@@ -62,7 +87,7 @@ const Register = () => {
                 <span>Password</span>
                 <br />
                 <input
-                  type="text"
+                  type="password"
                   placeholder="Enter your password"
                   className="w-80 px-3 py-1 border rounded-md outline-none"
                   {...register("password", { required: true })}
@@ -76,19 +101,20 @@ const Register = () => {
               </div>
               {/* Button */}
               <div className="flex justify-around mt-4">
-                <button className="bg-pink-500 text-white rounded-md px-3 py-1 hover:bg-pink-700 duration-200">
+                <button
+                  type="submit"
+                  className="bg-pink-500 text-white rounded-md px-3 py-1 hover:bg-pink-700 duration-200"
+                >
                   Signup
                 </button>
                 <p className="text-xl">
                   Have account?{" "}
-                  <button
+                  <Link
+                    to="/"
                     className="underline text-blue-500 cursor-pointer"
-                    onClick={() =>
-                      document.getElementById("my_modal_3").showModal()
-                    }
                   >
                     Login
-                  </button>{" "}
+                  </Link>{" "}
                   <Login />
                 </p>
               </div>
@@ -97,7 +123,7 @@ const Register = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

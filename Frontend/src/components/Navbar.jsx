@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Login from "./Login";
+import { useAuth } from "../context/auth.jsx";
+import Logout from "./Logout.jsx";
 const Navbar = () => {
   const [sticky, setSticky] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem("theme") ? localStorage.getItem("theme") : "light")
@@ -33,6 +35,8 @@ const Navbar = () => {
     };
   }, []);
 
+  const [auth] = useAuth()
+
   const navItems = (
     <>
       <li>
@@ -54,7 +58,7 @@ const Navbar = () => {
       <div
         className={`max-w-screen-2xl dark:bg-slate-900 dark:text-white container mx-auto md:px-20 px-4 fixed top-0 left-0 right-0 z-50 ${
           sticky &&
-          "sticky-navbar dark:bg-slate-800 dark:text-white shadow-md bg-base-200 duration-300 transition-all ease-in-out"
+          "sticky-navbar dark:bg-slate-750 dark:text-white shadow-md bg-base-200 duration-300 transition-all ease-in-out"
         }`}
       >
         <div className="navbar">
@@ -139,11 +143,15 @@ const Navbar = () => {
               </svg>
             </label>
             <div className="navbar-end">
-              <a className="bg-black text-white px-3 py-2 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
-              onClick={() => document.getElementById("my_modal_3").showModal()}>
+              {auth ? <Logout /> : (
+                <>
+                <a className="bg-black text-white px-3 py-2 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
+                onClick={() => document.getElementById("my_modal_3").showModal()}>
                 Login
               </a>
               <Login />
+                  </>
+              )}
             </div>
             
           </div>
