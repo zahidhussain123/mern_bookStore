@@ -3,15 +3,18 @@ import {  Navigate, Route, Routes } from "react-router-dom";
 import Courses from "./pages/courses/Courses";
 import Register from "./components/Register";
 import { useAuth } from "./context/auth.jsx";
-import  { Toaster } from 'react-hot-toast';
+import  {  Toaster } from 'react-hot-toast';
+import AddBook from "./pages/addBook/AddBook.jsx";
 
 function App() {
   const [auth] = useAuth()
+
   return (
     <div className="dark:bg-slate-900 dark:text-white">
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/courses" element={auth ? <Courses /> : <Navigate to="/register" />} />           
+      <Route path="/addBook" element={auth ? <AddBook /> : <Navigate to="/register" />} />           
       <Route path="/register" element={<Register />} /> 
     </Routes>
     <Toaster />

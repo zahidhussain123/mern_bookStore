@@ -1,11 +1,24 @@
 import mongoose from "mongoose";
 
 const bookSchema = mongoose.Schema({
-    name: String,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    },
+    title: {
+        type: String,
+        required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
     price: Number,
-    category: String,
+    category: {
+        type: String,
+        required: true
+    },
     image: String,
-    title: String,
 })
 
 const BookModel = mongoose.model("book", bookSchema)
